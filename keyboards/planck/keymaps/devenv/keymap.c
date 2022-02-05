@@ -29,7 +29,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_Q,               KC_W,               KC_E,               KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,                   KC_O,                 KC_P,           KC_TRANSPARENT,
     KC_TRANSPARENT, MT(MOD_LSFT, KC_A), KC_S,               KC_D,               KC_F,           KC_G,           KC_H,           KC_J,           KC_K,                   KC_L,                 MT(MOD_LSFT, KC_QUOTE),KC_TRANSPARENT,
     KC_TRANSPARENT, MT(MOD_LCTL, KC_Z), MT(MOD_LGUI, KC_X), MT(MOD_LALT, KC_C), KC_V,           KC_B,           KC_N,           KC_M,           MT(MOD_LALT, KC_COMMA), MT(MOD_LGUI, KC_DOT), MT(MOD_LCTL, KC_SLASH),KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_TRANSPARENT,     KC_TRANSPARENT,     MO(_MOUSE),              LT(_EXTRA,KC_SPACE), MO(_SYMBOLS),          KC_NO,          KC_BSPACE,      KC_ENTER,               KC_TRANSPARENT,       KC_TRANSPARENT, KC_TRANSPARENT
+    KC_TRANSPARENT, KC_TRANSPARENT,     KC_TRANSPARENT,     MO(_MOUSE),              LT(_EXTRA,KC_SPACE), MO(_SYMBOLS),          KC_NO,          KC_BSPACE,      KC_TRANSPARENT,               KC_TRANSPARENT,       KC_TRANSPARENT, KC_TRANSPARENT
   ),
 
   [_MOUSE] = LAYOUT_planck_grid(
@@ -42,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYMBOLS] = LAYOUT_planck_grid(
     KC_TRANSPARENT, KC_EXLM,        KC_AT,          KC_HASH,        KC_DLR,         KC_PERC,        KC_CIRC,    KC_7,           KC_8,           KC_9,           KC_EQUAL,       KC_TRANSPARENT,
     KC_TRANSPARENT, TD(DANCE_QUESTION),    KC_UNDS,        KC_MINUS,       KC_COLN,        KC_LPRN,        KC_RPRN,        KC_4,           KC_5,           KC_6,           MT(MOD_LSFT, KC_0),KC_TRANSPARENT,
-    KC_TRANSPARENT, MT(MOD_LCTL, KC_GRAVE),MT(MOD_LGUI, KC_BSLASH),TD(DANCE_STAR),    KC_SCOLON,      KC_LBRACKET,    KC_RBRACKET,    KC_1,           MT(MOD_LALT, KC_2),MT(MOD_LGUI, KC_3),MT(MOD_LCTL, LSFT(KC_AMPR)),KC_TRANSPARENT,
+    KC_TRANSPARENT, MT(MOD_LCTL, KC_GRAVE),MT(MOD_LGUI, KC_BSLASH),TD(DANCE_STAR),    KC_SCOLON,      KC_LBRACKET,    KC_RBRACKET,    KC_1,           MT(MOD_LALT, KC_2),MT(MOD_LGUI, KC_3),MT(MOD_LCTL, KC_DOT),KC_TRANSPARENT,
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
 
@@ -309,6 +309,9 @@ void matrix_scan_user(void) {
     SEQ_ONE_KEY(KC_E) {
       SEND_STRING("boris.churzin@gmail.com");
     }
+    SEQ_ONE_KEY(KC_F) {
+      SEND_STRING("boris.churzin@fundbox.com");
+    }
     SEQ_ONE_KEY(KC_O) {
       SEND_STRING(":+1:");
     }
@@ -322,16 +325,16 @@ void matrix_scan_user(void) {
       SEND_STRING(":thanks:");
     }
     SEQ_ONE_KEY(KC_5) {
-      SEND_STRING(SS_TAP(X_ENTER) "..." SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_ENTER) SS_DELAY(50) "..." SS_TAP(X_ENTER));
     }
     SEQ_ONE_KEY(KC_4) {
-      SEND_STRING(SS_TAP(X_ENTER) "lol" SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_ENTER) SS_DELAY(50) "lol" SS_TAP(X_ENTER));
     }
     SEQ_ONE_KEY(KC_9) {
-      SEND_STRING(SS_TAP(X_ENTER) "gg" SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_ENTER) SS_DELAY(50) "gg" SS_TAP(X_ENTER));
     }
     SEQ_ONE_KEY(KC_2) {
-      SEND_STRING(SS_TAP(X_ENTER) "chill it's just qp" SS_TAP(X_ENTER));
+      SEND_STRING(SS_TAP(X_ENTER) SS_DELAY(50) "chill it's just qp" SS_TAP(X_ENTER));
     }
   }
 }
