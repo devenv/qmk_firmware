@@ -1,7 +1,4 @@
 #include QMK_KEYBOARD_H
-#ifdef AUDIO_ENABLE
-#include "muse.h"
-#endif
 #include "eeprom.h"
 #include "keymap_us_international.h"
 
@@ -50,10 +47,10 @@ enum planck_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT_planck_grid(
-    KC_TRANSPARENT, KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_TRANSPARENT,
-    KC_TRANSPARENT, MT(MOD_LSFT, KC_A),KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           MT(MOD_LSFT, KC_QUOTE),KC_TRANSPARENT,
-    KC_TRANSPARENT, MT(MOD_LCTL, KC_Z),MT(MOD_LGUI, KC_X),MT(MOD_LALT, KC_C),KC_V,           KC_B,           KC_N,           KC_M,           MT(MOD_LALT, KC_COMMA),MT(MOD_LGUI, KC_DOT),MT(MOD_LCTL, KC_TAB),KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, MO(1),          LT(4,KC_SPACE), MO(2),          KC_NO,          KC_BSPACE,      KC_ENTER,       KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+    KC_TRANSPARENT, KC_Q,               KC_W,               KC_E,               KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,                   KC_O,                 KC_P,           KC_TRANSPARENT,
+    KC_TRANSPARENT, MT(MOD_LSFT, KC_A), KC_S,               KC_D,               KC_F,           KC_G,           KC_H,           KC_J,           KC_K,                   KC_L,                 MT(MOD_LSFT, KC_QUOTE),KC_TRANSPARENT,
+    KC_TRANSPARENT, MT(MOD_LCTL, KC_Z), MT(MOD_LGUI, KC_X), MT(MOD_LALT, KC_C), KC_V,           KC_B,           KC_N,           KC_M,           MT(MOD_LALT, KC_COMMA), MT(MOD_LGUI, KC_DOT), MT(MOD_LCTL, KC_SLASH),KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT,     KC_TRANSPARENT,     MO(1),              LT(4,KC_SPACE), MO(2),          KC_NO,          KC_BSPACE,      KC_ENTER,               KC_TRANSPARENT,       KC_TRANSPARENT, KC_TRANSPARENT
   ),
 
   [_LOWER] = LAYOUT_planck_grid(
@@ -66,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_RAISE] = LAYOUT_planck_grid(
     KC_TRANSPARENT, KC_EXLM,        KC_AT,          KC_HASH,        KC_DLR,         KC_PERC,        TD(DANCE_0),    KC_7,           KC_8,           KC_9,           KC_EQUAL,       KC_TRANSPARENT,
     KC_TRANSPARENT, TD(DANCE_1),    KC_UNDS,        KC_MINUS,       KC_COLN,        KC_LPRN,        KC_RPRN,        KC_4,           KC_5,           KC_6,           MT(MOD_LSFT, KC_0),KC_TRANSPARENT,
-    KC_TRANSPARENT, MT(MOD_LCTL, KC_SLASH),MT(MOD_LGUI, KC_BSLASH),TD(DANCE_2),    KC_SCOLON,      KC_LBRACKET,    KC_RBRACKET,    KC_1,           MT(MOD_LALT, KC_2),MT(MOD_LGUI, KC_3),MT(MOD_LCTL, KC_GRAVE),KC_TRANSPARENT,
+    KC_TRANSPARENT, MT(MOD_LCTL, KC_GRAVE),MT(MOD_LGUI, KC_BSLASH),TD(DANCE_2),    KC_SCOLON,      KC_LBRACKET,    KC_RBRACKET,    KC_1,           MT(MOD_LALT, KC_2),MT(MOD_LGUI, KC_3),MT(MOD_LCTL, KC_PLUS),KC_TRANSPARENT,
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
 
@@ -107,7 +104,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-extern bool g_suspend_state;
 extern rgb_config_t rgb_matrix_config;
 
 void keyboard_post_init_user(void) {
@@ -149,7 +145,7 @@ void set_layer_color(int layer) {
 }
 
 void rgb_matrix_indicators_user(void) {
-  if (g_suspend_state || keyboard_config.disable_layer_led) { return; }
+  if (keyboard_config.disable_layer_led) { return; }
   switch (biton32(layer_state)) {
     case 1:
       set_layer_color(1);
@@ -189,76 +185,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
-#ifdef AUDIO_ENABLE
-bool muse_mode = false;
-uint8_t last_muse_note = 0;
-uint16_t muse_counter = 0;
-uint8_t muse_offset = 70;
-uint16_t muse_tempo = 50;
-
-void encoder_update(bool clockwise) {
-    if (muse_mode) {
-        if (IS_LAYER_ON(_RAISE)) {
-            if (clockwise) {
-                muse_offset++;
-            } else {
-                muse_offset--;
-            }
-        } else {
-            if (clockwise) {
-                muse_tempo+=1;
-            } else {
-                muse_tempo-=1;
-            }
-        }
-    } else {
-        if (clockwise) {
-        #ifdef MOUSEKEY_ENABLE
-            register_code(KC_MS_WH_DOWN);
-            unregister_code(KC_MS_WH_DOWN);
-        #else
-            register_code(KC_PGDN);
-            unregister_code(KC_PGDN);
-        #endif
-        } else {
-        #ifdef MOUSEKEY_ENABLE
-            register_code(KC_MS_WH_UP);
-            unregister_code(KC_MS_WH_UP);
-        #else
-            register_code(KC_PGUP);
-            unregister_code(KC_PGUP);
-        #endif
-        }
-    }
-}
-
-void matrix_scan_user(void) {
-#ifdef AUDIO_ENABLE
-    if (muse_mode) {
-        if (muse_counter == 0) {
-            uint8_t muse_note = muse_offset + SCALE[muse_clock_pulse()];
-            if (muse_note != last_muse_note) {
-                stop_note(compute_freq_for_midi_note(last_muse_note));
-                play_note(compute_freq_for_midi_note(muse_note), 0xF);
-                last_muse_note = muse_note;
-            }
-        }
-        muse_counter = (muse_counter + 1) % muse_tempo;
-    }
-#endif
-}
-
-bool music_mask_user(uint16_t keycode) {
-    switch (keycode) {
-    case RAISE:
-    case LOWER:
-        return false;
-    default:
-        return true;
-    }
-}
-#endif
 
 uint32_t layer_state_set_user(uint32_t state) {
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
@@ -479,3 +405,23 @@ qk_tap_dance_action_t tap_dance_actions[] = {
         [DANCE_4] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_4, dance_4_finished, dance_4_reset),
 };
 
+const key_override_t alt_tab_key_override = ko_make_basic(MOD_MASK_ALT, KC_Q, LALT(KC_TAB));
+const key_override_t ctrl_tab_key_override = ko_make_basic(MOD_MASK_CTRL, KC_Q, LCTL(KC_TAB));
+
+// This globally defines all key overrides to be used
+const key_override_t **key_overrides = (const key_override_t *[]) {
+    &alt_tab_key_override,
+    &ctrl_tab_key_override,
+    NULL // Null terminate the array of overrides!
+};
+
+const uint16_t PROGMEM esc_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM enter_combo[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM backspace_combo[] = {KC_L, KC_K, COMBO_END};
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(esc_combo, KC_ESC),
+    COMBO(enter_combo, KC_ENTER),
+    COMBO(tab_combo, KC_TAB),
+    COMBO(backspace_combo, KC_BACKSPACE),
+};
