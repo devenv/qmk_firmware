@@ -407,6 +407,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 const key_override_t alt_tab_key_override = ko_make_basic(MOD_MASK_ALT, KC_Q, LALT(KC_TAB));
 const key_override_t ctrl_tab_key_override = ko_make_basic(MOD_MASK_CTRL, KC_Q, LCTL(KC_TAB));
+const key_override_t left_shift_key_override = ko_make_basic(MOD_MASK_ALT, KC_A, LSFT);
+const key_override_t right_shift_key_override = ko_make_basic(MOD_MASK_ALT, KC_QUOTE, LSFT);
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]) {
@@ -418,10 +420,11 @@ const key_override_t **key_overrides = (const key_override_t *[]) {
 const uint16_t PROGMEM esc_combo[] = {KC_D, KC_F, COMBO_END};
 const uint16_t PROGMEM enter_combo[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM tab_combo[] = {KC_S, KC_D, COMBO_END};
-const uint16_t PROGMEM backspace_combo[] = {KC_L, KC_K, COMBO_END};
+const uint16_t PROGMEM capslock_combo[] = {KC_L, KC_K, COMBO_END};
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(esc_combo, KC_ESC),
     COMBO(enter_combo, KC_ENTER),
     COMBO(tab_combo, KC_TAB),
-    COMBO(backspace_combo, KC_BACKSPACE),
+    COMBO(capslock_combo, KC_CAPSLOCK),
 };
+
