@@ -17,6 +17,7 @@
 #define DEBOUNCE 15
 
 #define COMBO_COUNT 4
+#define LEADER_TIMEOUT 300
 
 #define RGBLIGHT_SLEEP
 #define RGBLIGHT_LAYERS
